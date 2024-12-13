@@ -1,0 +1,969 @@
+basePath: /api/v1
+definitions:
+  example_project-management-system_internal_models.Comment:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      task:
+        $ref: '#/definitions/example_project-management-system_internal_models.Task'
+      task_id:
+        type: integer
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/example_project-management-system_internal_models.User'
+      user_id:
+        type: integer
+    type: object
+  example_project-management-system_internal_models.Project:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      start_date:
+        type: string
+      status:
+        type: string
+      tasks:
+        description: One-to-Many with Tasks
+        items:
+          $ref: '#/definitions/example_project-management-system_internal_models.Task'
+        type: array
+      teams:
+        description: One-to-Many with Teams
+        items:
+          $ref: '#/definitions/example_project-management-system_internal_models.Team'
+        type: array
+      updated_at:
+        type: string
+      user_ids:
+        items:
+          type: integer
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/example_project-management-system_internal_models.User'
+        type: array
+    type: object
+  example_project-management-system_internal_models.Task:
+    properties:
+      assigned_to:
+        description: Many-to-One với User
+        type: integer
+      assignee:
+        $ref: '#/definitions/example_project-management-system_internal_models.User'
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      project:
+        $ref: '#/definitions/example_project-management-system_internal_models.Project'
+      project_id:
+        description: Many-to-One với Project
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  example_project-management-system_internal_models.Team:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      project:
+        allOf:
+        - $ref: '#/definitions/example_project-management-system_internal_models.Project'
+        description: 'onUpdate:CASCADE: Khi ProjectID trong bảng Project thay đổi,
+          nó sẽ cập nhật tự động trong bảng Team. onDelete:SET NULL: Nếu một project
+          bị xóa, ProjectID trong bảng Team sẽ được đặt thành NULL thay vì xóa toàn
+          bộ team.'
+      project_id:
+        type: integer
+      updated_at:
+        type: string
+      users:
+        description: 'onUpdate:CASCADE: Khi UserID trong bảng User thay đổi, liên
+          kết trong bảng trung gian (user_teams) sẽ được cập nhật. onDelete:CASCADE:
+          Khi một user bị xóa, liên kết trong bảng trung gian (user_teams) cũng bị
+          xóa.'
+        items:
+          $ref: '#/definitions/example_project-management-system_internal_models.User'
+        type: array
+    type: object
+  example_project-management-system_internal_models.User:
+    description: User model with basic information and relationships
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        description: '@Description Unique email address of the user'
+        type: string
+      first_name:
+        description: '@Description User''s first name'
+        type: string
+      id:
+        type: integer
+      last_name:
+        description: '@Description User''s last name'
+        type: string
+      project_ids:
+        description: Relationships are typically not serialized in Swagger docs
+        items:
+          type: integer
+        type: array
+      projects:
+        items:
+          $ref: '#/definitions/example_project-management-system_internal_models.Project'
+        type: array
+      role:
+        description: '@Description User''s role in the system'
+        type: string
+      updated_at:
+        type: string
+      username:
+        description: '@Description Unique username for the user'
+        type: string
+    type: object
+  example_project-management-system_internal_utils_response.Response:
+    properties:
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API for managing projects, tasks, teams, and users
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Project Management System API
+  version: "1.0"
+paths:
+  /api/v1/tasks:
+    put:
+      consumes:
+      - application/json
+      description: Update a task's details
+      parameters:
+      - description: Task details to be updated
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task updated successfully
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Task'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update a task
+      tags:
+      - Tasks
+  /comments:
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment associated with a specific task
+      parameters:
+      - description: Comment Creation Request
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Comment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Comment created successfully
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Comment'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new comment
+      tags:
+      - Comments
+  /comments/{id}:
+    delete:
+      description: Remove a comment from the system by its ID
+      parameters:
+      - description: Comment ID to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a comment
+      tags:
+      - Comments
+    get:
+      description: Retrieve a comment using its unique ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Comment'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: Comment not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get a comment by ID
+      tags:
+      - Comments
+  /projects:
+    get:
+      description: Retrieve paginated list of projects
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of projects per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get all projects
+      tags:
+      - Projects
+    post:
+      consumes:
+      - application/json
+      description: Create a new project with provided details
+      parameters:
+      - description: Project Creation Request
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Project'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Project created successfully
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new project
+      tags:
+      - Projects
+  /projects/{id}:
+    delete:
+      description: Remove a project from the system by their ID
+      parameters:
+      - description: Project ID to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a project
+      tags:
+      - Projects
+    get:
+      description: Retrieve a specific project by their unique identifier
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Project'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get project by ID
+      tags:
+      - Projects
+    put:
+      consumes:
+      - application/json
+      description: Update a project's details by its ID
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Project Details
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Project'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Project'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update an existing project
+      tags:
+      - Projects
+  /projects/{project_id}/tasks:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve paginated tasks associated with a specific project
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated list of tasks
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Retrieve tasks by project ID
+      tags:
+      - Tasks
+  /projects/{projectID}/tasks:
+    get:
+      description: Retrieve a list task by their ID
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get task by project ID
+      tags:
+      - Projects
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: Create a new task with provided details
+      parameters:
+      - description: Task Creation Request
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task created successfully
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new task
+      tags:
+      - Tasks
+  /tasks/{id}:
+    delete:
+      description: Delete a task by its ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a task
+      tags:
+      - Tasks
+    get:
+      description: Retrieve a specific task by their unique identifier
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Task'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get task by ID
+      tags:
+      - Tasks
+  /tasks/{task_id}/comments:
+    get:
+      description: Retrieve paginated comments associated with a specific task
+      parameters:
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of comments per page
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get comments by task
+      tags:
+      - Comments
+  /teams:
+    get:
+      description: Retrieve paginated list of teams
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of teams per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get all teams
+      tags:
+      - Teams
+    post:
+      consumes:
+      - application/json
+      description: Create a new team with provided details
+      parameters:
+      - description: Team Creation Request
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Team'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Team created successfully
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new team
+      tags:
+      - Teams
+  /teams/{id}:
+    delete:
+      description: Remove a team from the system by their ID
+      parameters:
+      - description: Team ID to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Team deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a team
+      tags:
+      - Teams
+    get:
+      description: Retrieve a specific team by their unique identifier
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Team'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get team by ID
+      tags:
+      - Teams
+    put:
+      consumes:
+      - application/json
+      description: Update a team's details by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Team Details
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.Team'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.Team'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update an existing team
+      tags:
+      - Teams
+  /users:
+    get:
+      description: Retrieve paginated list of users
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of users per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with provided details
+      parameters:
+      - description: Username
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/example_project-management-system_internal_models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new user
+      tags:
+      - Users
+  /users-projects/{projectId}/users/{userId}:
+    post:
+      description: Add a user to a specified project by their IDs
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Add a user to a project
+      tags:
+      - user_project
+  /users/{id}:
+    delete:
+      description: Remove an user from the system by their ID
+      parameters:
+      - description: User ID to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete an user
+      tags:
+      - Users
+    get:
+      description: Retrieve a specific user by their unique identifier
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_models.User'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/example_project-management-system_internal_utils_response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

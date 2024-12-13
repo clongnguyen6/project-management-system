@@ -1,0 +1,8 @@
+drop table user_projects;
+drop table user_teams;
+drop table comments;
+drop table teams;
+drop table tasks;
+drop table projects;
+drop table users;
+drop table migration_versions;  

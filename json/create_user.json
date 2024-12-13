@@ -1,0 +1,21 @@
+{
+    "username": "long40",
+    "email": "long40@gmail.com",
+    "password": "long123",
+    "first_name": "Long",
+    "last_name": "Nguyen",
+    "role": "P2"
+}
+
+{
+    "username": "long41",
+    "email": "long41@gmail.com",
+    "password": "long123",
+    "first_name": "Long",
+    "last_name": "Nguyen",
+    "project_ids": [
+        2,
+        1
+    ],
+    "role": "P2"
+}
