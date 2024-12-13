@@ -1,34 +1,3 @@
-project-management/
-├── cmd/
-│   ├── main.go               # Điểm khởi động ứng dụng
-│   ├── migrate.go            # Tệp riêng để chạy migrations
-├── config/
-│   └── config.go             # Quản lý cấu hình ứng dụng
-├── internal/
-│   ├── models/
-│   │   ├── project.go         # Định nghĩa model Project
-│   │   ├── user.go            # Định nghĩa model User
-│   │   ├── task.go            # Định nghĩa model Task
-│   │   ├── role.go            # Định nghĩa model Role
-│   │   ├── project_user.go    # Định nghĩa model ProjectUser
-│   ├── handlers/
-│   │   ├── project.go         # Handlers cho Project
-│   │   ├── user.go            # Handlers cho User
-│   │   ├── task.go            # Handlers cho Task
-│   │   ├── role.go            # Handlers cho Role
-│   │   ├── project_user.go    # Handlers cho ProjectUser
-│   ├── router/
-│   │   └── router.go          # Định nghĩa router
-│   ├── database/
-│   │   ├── connection.go      # Kết nối database
-│   │   ├── migrations.go      # Quản lý migrations
-│   ├── middlewares/
-│   │   └── middlewares.go     # Middleware xử lý logs, lỗi, CORS
-│   ├── utils/
-│       └── helpers.go         # Các hàm phụ trợ
-└── go.mod                    # Tệp module Go
-
-
 // Swagger:
 go get -u github.com/swaggo/swag/cmd/swag
 go get -u github.com/swaggo/http-swagger/v2

@@ -7,7 +7,6 @@ import (
 	"example/project-management-system/internal/database"
 	"example/project-management-system/internal/server"
 	"example/project-management-system/pkg/logger"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -40,7 +39,6 @@ import (
 func main() {
 	// Load config env
 	cfg := config.LoadEnvConfigs()
-	fmt.Println(cfg)
 
 	// Initialize logger
 	appLogger := logger.NewLogger()

@@ -66,16 +66,12 @@ func (h *CommentHandlerImplementation) CreateComment(w http.ResponseWriter, r *h
 //	@Router			/comments/{id} [get]
 func (h *CommentHandlerImplementation) GetCommentByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
-	fmt.Println("==id: ", id)
-	fmt.Println("==err: ", err)
 	if err != nil || id <= 0 {
 		response.WriteJson(w, http.StatusBadRequest, response.GeneralError(fmt.Errorf("%s", "invalid ID")))
 		return
 	}
 
 	comment, err := h.service.GetCommentByID(r.Context(), uint(id))
-	fmt.Println("==comment: ", comment)
-	fmt.Println("==err: ", err)
 	if err != nil {
 		response.WriteJson(w, http.StatusNotFound, response.GeneralError(err))
 		return

@@ -5,7 +5,6 @@ import (
 	"example/project-management-system/internal/models"
 	"example/project-management-system/internal/services"
 	"example/project-management-system/internal/utils/response"
-	"fmt"
 	"net/http"
 
 	"strconv"
@@ -40,19 +39,12 @@ func NewTaskHandler(service services.TaskService) *TaskHandlerImplementation {
 //	@Failure		500		{object}	response.Response	"Server error"
 //	@Router			/tasks [post]
 func (h *TaskHandlerImplementation) CreateTask(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("3333333333")
 	var task models.Task
-	// err := json.NewDecoder(r.Body).Decode(&task)
-	// fmt.Println("Errr: ", err)
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		fmt.Println("555")
 		response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
-		fmt.Println("666")
 		return
 	}
-	fmt.Println("8888")
 	if err := h.service.CreateTask(r.Context(), &task); err != nil {
-		fmt.Println("Err77: ", err)
 		response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(err))
 		return
 	}
@@ -73,14 +65,12 @@ func (h *TaskHandlerImplementation) CreateTask(w http.ResponseWriter, r *http.Re
 //	@Router			/tasks/{id} [get]
 func (h *TaskHandlerImplementation) GetTaskByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
-	fmt.Println(err)
 	if err != nil || id <= 0 {
 		response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
 		return
 	}
 
 	task, err := h.service.GetTaskByID(r.Context(), uint(id))
-	fmt.Println("==task:", task)
 	if err != nil {
 		response.WriteJson(w, http.StatusNotFound, response.GeneralError(err))
 		return
@@ -145,10 +135,8 @@ func (h *TaskHandlerImplementation) GetTasksByProject(w http.ResponseWriter, r *
 //	@Router			/api/v1/tasks [put]
 func (h *TaskHandlerImplementation) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	var task models.Task
-	fmt.Println("11111111")
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
-		fmt.Println("11111111")
 		return
 	}
 

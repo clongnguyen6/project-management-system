@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"errors"
-	"fmt"
 	"regexp"
 	"testing"
 
@@ -293,7 +292,6 @@ func TestUpdateTask(t *testing.T) {
 
 			// Execute update task
 			err := repo.UpdateTask(context.Background(), tc.task)
-			fmt.Println("===ERR: ", err)
 
 			// Assertions
 			if tc.expectedError {

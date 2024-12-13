@@ -10,7 +10,6 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"net/url"
 	"strconv"
 
 	"github.com/go-playground/validator"
@@ -145,11 +144,6 @@ func (s *UserHandlerImplementation) GetAllUsers(w http.ResponseWriter, r *http.R
 //	@Router			/users/{id} [get]
 func (s *UserHandlerImplementation) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
-	idNew, _ := url.ParseQuery(r.URL.RawQuery)
-	fmt.Println("IdNew:", idNew)
-	fmt.Println("NEWWW: ", idNew.Get("id"))
-	fmt.Println("====Id params: ", r.PathValue("id"))
-	fmt.Println("===Error: ", err)
 	if err != nil {
 		response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(fmt.Errorf("%s", "Invalid user ID")))
 		return

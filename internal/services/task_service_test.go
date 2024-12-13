@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"example/project-management-system/internal/models"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,7 +20,6 @@ func (m *MockTaskRepository) CreateTask(ctx context.Context, task *models.Task) 
 
 func (m *MockTaskRepository) GetTaskByID(ctx context.Context, id uint) (*models.Task, error) {
     args := m.Called(ctx, id)
-	fmt.Println("==ARGS: ", args)
     return args.Get(0).(*models.Task), args.Error(1)
 }
 

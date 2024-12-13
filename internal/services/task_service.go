@@ -25,12 +25,9 @@ func NewTaskService(repo repositories.TaskRepository) TaskService {
 
 func (s *TaskServiceImplementation) CreateTask(ctx context.Context, task *models.Task) error {
 	// Example validation logic
-	fmt.Println("==task.Title: ", task.Title)
 	if task.Title == "" {
-		fmt.Println("==ERR: ", fmt.Errorf("task title is required"))
 		return fmt.Errorf("task title is required")
 	}
-	fmt.Println("===ProjectID: ", task.ProjectID)
 	if task.ProjectID == 0 {
 		return fmt.Errorf("task must be associated with a project")
 	}
@@ -38,11 +35,8 @@ func (s *TaskServiceImplementation) CreateTask(ctx context.Context, task *models
 }
 
 func (s *TaskServiceImplementation) GetTaskByID(ctx context.Context, id uint) (*models.Task, error) {
-	fmt.Println("AAAAAAAA")
 	task, err := s.repo.GetTaskByID(ctx, id)
-	fmt.Println("BBBBBBB")
 	if err != nil {
-		fmt.Println("Service ERR: ", err)
 		return nil, fmt.Errorf("task not found")
 	}
 	return task, nil

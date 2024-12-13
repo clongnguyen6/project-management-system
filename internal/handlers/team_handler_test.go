@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"example/project-management-system/internal/models"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -71,7 +70,6 @@ func TestCreateTeam(t *testing.T) {
 		handler.CreateTeam(w, req)
 
 		assert.Equal(t, http.StatusCreated, w.Code)
-		fmt.Println(w.Body)
 		assert.Contains(t, w.Body.String(), `{"id":0,"created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z","deleted_at":null,"name":"Test Team","description":"Test Description","project_id":1,"project":{"id":0,"created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z","deleted_at":null,"name":"","description":"","start_date":"0001-01-01T00:00:00Z","end_date":"0001-01-01T00:00:00Z","status":"","user_ids":null,"users":null,"tasks":null,"teams":null},"users":null}`)
 	})
 }

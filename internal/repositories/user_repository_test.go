@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"example/project-management-system/internal/models"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -61,7 +60,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 			LastName:  "User",
 			Role: "DEV",
 		}
-		fmt.Println("===User:", user)
 		err := repo.CreateUser(context.Background(), user)
 		assert.NoError(t, err)
 	})
