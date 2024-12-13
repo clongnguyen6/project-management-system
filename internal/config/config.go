@@ -11,7 +11,7 @@ type Config struct {
 	Db   DbConfig // Embedded struct for DB configuration
 	AUTH0_DOMAIN string `env:"AUTH0_DOMAIN" envDefault:"https://dev-n5mocwlrk8i63cjm.us.auth0.com/"`
 	AUTH0_AUDIENCE string `env:"AUTH0_AUDIENCE" envDefault:"https://project-management-api"`
-
+	ENVIRONMENT string	`env:"ENVIRONMENT" envDefault:"local"`
 }
 
 type DbConfig struct {

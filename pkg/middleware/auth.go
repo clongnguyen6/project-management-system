@@ -20,8 +20,14 @@ const (
 	internalServerErrorMessage = "Internal Server Error"
 )
 
-func ValidateJWT(audience, domain string, next http.HandlerFunc) http.HandlerFunc {
+func ValidateJWT(audience, domain, env string, next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// For testing
+		if env == "test" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		issuerURL, err := url.Parse(domain)
 		if err != nil {
 			log.Fatalf("Failed to parse the issuer url: %v", err)
@@ -31,12 +37,15 @@ func ValidateJWT(audience, domain string, next http.HandlerFunc) http.HandlerFun
 
 		jwtValidator, err := validator.New(
 			provider.KeyFunc,
-			validator.RS256,
+			validator.HS256,
 			issuerURL.String(),
 			[]string{audience},
 		)
 		if err != nil {
-			log.Fatalf("Failed to set up the jwt validator")
+			// log.Fatalf("Failed to set up the jwt validator")
+			log.Printf("Failed to set up the jwt validator: %v", err)
+			response.WriteJson(w, http.StatusInternalServerError, map[string]string{"message": "JWT validator setup failed"})
+			return
 		}
 
     if authHeaderParts := strings.Fields(r.Header.Get("Authorization")); len(authHeaderParts) > 0 && strings.ToLower(authHeaderParts[0]) != "bearer" {

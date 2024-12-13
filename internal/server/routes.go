@@ -20,86 +20,89 @@ func RegisterRoutes(
 ) http.Handler {
 
 	router.HandleFunc("POST /api/v1/users",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, userHandler.CreateUser),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, userHandler.CreateUser),
 	)
 	router.HandleFunc("GET /api/v1/users",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, userHandler.GetAllUsers),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, userHandler.GetAllUsers),
 	)
 	router.HandleFunc("GET /api/v1/users/{id}",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, userHandler.GetUserByID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, userHandler.GetUserByID),
 	)
 	router.HandleFunc("DELETE /api/v1/users/{id}",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, userHandler.DeleteUser),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, userHandler.DeleteUser),
 	)
 	router.HandleFunc("POST /api/v1/projects/{projectId}/users/{userId}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, userProjectHandler.AddUserToProject),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, userProjectHandler.AddUserToProject),
 	)
 
 	router.HandleFunc("POST /api/v1/projects",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.CreateProject),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.CreateProject),
 	)
+	// router.HandleFunc("POST /api/v1/projects",
+	// 	projectHandler.CreateProject,
+	// )
 	router.HandleFunc("GET /api/v1/projects",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.GetAllProjects),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.GetAllProjects),
 	)
 	router.HandleFunc("GET /api/v1/projects/{id}",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.GetProjectByID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.GetProjectByID),
 	)
 	router.HandleFunc("PUT /api/v1/projects/{id}",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.UpdateProject),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.UpdateProject),
 	)
 	router.HandleFunc("DELETE /api/v1/projects/{id}",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.DeleteProject),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.DeleteProject),
 	)
 	router.HandleFunc("GET /api/v1/projects/{projectID}/tasks",
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, projectHandler.GetTaskByProjectID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, projectHandler.GetTaskByProjectID),
 	)
 
 
 	router.HandleFunc("POST /api/v1/tasks", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, taskHandler.CreateTask),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, taskHandler.CreateTask),
 	)
 	router.HandleFunc("GET /api/v1/tasks/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, taskHandler.GetTaskByID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, taskHandler.GetTaskByID),
 	)
 	router.HandleFunc("GET /api/v1/tasks", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, taskHandler.GetTasksByProject),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, taskHandler.GetTasksByProject),
 	)
 	router.HandleFunc("PUT /api/v1/tasks/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, taskHandler.UpdateTask),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, taskHandler.UpdateTask),
 	)
 	router.HandleFunc("DELETE /api/v1/tasks/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, taskHandler.DeleteTask),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, taskHandler.DeleteTask),
 	)
 
 
 	router.HandleFunc("POST /api/v1/teams", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, teamHandler.CreateTeam),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, teamHandler.CreateTeam),
 	)
 	router.HandleFunc("GET /api/v1/teams/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, teamHandler.GetTeamByID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, teamHandler.GetTeamByID),
 	)
 	router.HandleFunc("GET /api/v1/teams", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, teamHandler.GetPaginatedTeams),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, teamHandler.GetPaginatedTeams),
 	)
 	router.HandleFunc("PUT /api/v1/teams/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, teamHandler.UpdateTeam),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, teamHandler.UpdateTeam),
 	)
 	router.HandleFunc("DELETE /api/v1/teams/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, teamHandler.DeleteTeam),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, teamHandler.DeleteTeam),
 	)
 
 
 	router.HandleFunc("POST /api/v1/comments", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, commentHandler.CreateComment),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, commentHandler.CreateComment),
 	)
 	router.HandleFunc("GET /api/v1/comments/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, commentHandler.GetCommentByID),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, commentHandler.GetCommentByID),
 	)
 	router.HandleFunc("GET /api/v1/comments", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, commentHandler.GetCommentsByTask),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, commentHandler.GetCommentsByTask),
 	)
 	router.HandleFunc("DELETE /api/v1/comments/{id}", 
-		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, commentHandler.DeleteComment),
+		middleware.ValidateJWT(cfg.AUTH0_AUDIENCE, cfg.AUTH0_DOMAIN, cfg.ENVIRONMENT, commentHandler.DeleteComment),
 	)
 
 
